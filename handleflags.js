@@ -2,7 +2,8 @@ const { includes, at } = require("lodash");
 
 // TODO: remember to add a string splice beceause rn 1 flag can exist at 1 time
 var screepUtils = require('./screepsutils');
-const attackerMax  = 2;
+var spawnAttacker = require('./creepspawner').spawnAttacker;
+const attackerMax  = 5;
 
 var handleFlags = {
   run: function() {
@@ -18,28 +19,11 @@ var handleFlags = {
           const screeps = _.groupBy(Game.creeps, creep => creep.memory.home);
           const attackers = screepUtils.getAttackerAmount(screeps[flagName], Game.rooms[flagName].memory.CreepSpawnList);
           if(attackers < attackerMax) {
-            this.spawnAttacker(attackerMax, attackers, flagName);
+            spawnAttacker(attackerMax, attackers, flagName);
           }
         }
       }
-
     }
-  },
-
-
-  spawnAttacker: function(attackerMax, attackers, flagName) {
-      for(i = 0; i < attackerMax - attackers; i++) {
-        Game.rooms[flagName].memory.CreepSpawnList.push({
-            creep: {
-                bodyparts: [MOVE,MOVE,RANGED_ATTACK],
-                role: 'attacker',
-                prio: 1001,
-                home: flagName,
-                targetRoom: Game.flags[flagName].pos.roomName,
-                respawn: false,
-            }
-        });    
-      }
   },
 
 };

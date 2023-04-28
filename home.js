@@ -7,7 +7,7 @@ var defender = require('./defender');
 var rangedbuilder = require('./rangedbuilder');
 var rangeddefender =  require('./rangeddefender')
 
-// var attacker = require('./attacker');
+var attacker = require('./attacker');
 var cleaner = require('./cleaner');
 var wallbreaker = require('./wallbreaker');
 var mover = require('./mover');
@@ -44,7 +44,8 @@ var home = {
             room.memory.oldStage = room.memory.stage;
         }
     },
-
+    
+    // TODO: fix spelling error HOSSTILE_ATTACKERS
     handleDefence: function(room) {
         var HOSSTILE_ATTACKERS = room.find(FIND_HOSTILE_CREEPS);
 

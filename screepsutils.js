@@ -28,7 +28,6 @@ const screepUtils = {
         return AttackerAmount = _.filter(screeps, (creep) => creep.memory.role == 'attacker').length +
             _.filter(CreepSpawnList, (creep) => creep.creep.role == 'attacker').length;
     },
-
 }
 
 module.exports = screepUtils;

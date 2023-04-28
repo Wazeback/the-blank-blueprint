@@ -4,6 +4,21 @@ const CREEPROLES = require('./SCREEP_DATA').CREEPROLES
 var screepsutils = require('./screepsutils')
 const SPHandler = {
 
+    spawnAttacker: function(attackerMax, attackers, flagName) {
+        for(i = 0; i < attackerMax - attackers; i++) {
+          Game.rooms[flagName].memory.CreepSpawnList.push({
+              creep: {
+                  bodyparts: [MOVE,MOVE,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK],
+                  role: 'attacker',
+                  prio: 1001,
+                  home: flagName,
+                  targetRoom: Game.flags[flagName],
+                  respawn: false,
+              }
+          }
+        );    
+      }
+    },
     HandleSpawnCreep: function(room) {
         var CreepSpawnList = room.memory.CreepSpawnList;
         if(!CreepSpawnList) { room.memory.CreepSpawnList = []; return; }
@@ -14,7 +29,6 @@ const SPHandler = {
         CreepSpawnList.splice(index, 1);
         room.memory.CreepSpawnList = CreepSpawnList;
     },
-    
     HandleCreepDeath: function(creep) {
         var CreepSpawnList = Game.rooms[creep.home].memory.CreepSpawnList;
         if(!CreepSpawnList) {room.memory.CreepSpawnList = []; return; } 
@@ -22,7 +36,6 @@ const SPHandler = {
         CreepSpawnList.push({creep: creep});
         Game.rooms[creep.home].memory.CreepSpawnList = CreepSpawnList;
     },
-
     HandleInitCreeps: function(room, screeps) {
         var CreepSpawnList = room.memory.CreepSpawnList;
         if(!CreepSpawnList) { room.memory.CreepSpawnList = [] };

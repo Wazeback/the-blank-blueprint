@@ -3,8 +3,6 @@ var home = require('./home');
 var handleFlags = require('./handleflags')
 // TODO: make a variable for every room that checks if the room is being attacked then send help.
 
-
-
 module.exports.loop = function () {
     global.Tmp = {}
     global.Stats = {}
@@ -15,9 +13,6 @@ module.exports.loop = function () {
     //       delete Memory.creeps[creepName];
     //     }
     // }
-
-    
-    
 
     if (!Memory.flags) Memory.flags = {}
     const creepsByHome = utils.splitScreepsByHome();
