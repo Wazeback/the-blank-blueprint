@@ -9,12 +9,12 @@ module.exports.loop = function () {
     global.Tmp = {}
     global.Stats = {}
 
-    // for (const creepName in Memory.creeps) {
-    //     // If the creep is dead, remove its memory object
-    //     if (!Game.creeps[creepName]) {
-    //       delete Memory.creeps[creepName];
-    //     }
-    // }
+//     for (const creepName in Memory.creeps) {
+//         // If the creep is dead, remove its memory object
+//         if (!Game.creeps[creepName]) {
+//           delete Memory.creeps[creepName];
+//         }
+//     }
 
     
     

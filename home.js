@@ -14,16 +14,27 @@ var mover = require('./mover');
 
 var creepspawner = require('./creepspawner');
 
+var buildManager = require ('./manager_build')
+
 var home = {
     run: function(home, creeps) {
+        if (!home.memory.spawnpos) {
+            const spawn = home.find(FIND_MY_SPAWNS)[0];
+            if (spawn) {
+            home.memory.spawnpos = spawn.pos;
+    }
+        }
         this.handleStage(home, creeps);
         this.handleDefence(home)
+        this.getStage(home)
         
         _.forEach(creeps, (creep) => {
             eval(creep.memory.role).run(creep);
         })
 
         creepspawner.HandleSpawnCreep(home)
+
+        buildManager.run(home)
 
     },
     
@@ -67,6 +78,12 @@ var home = {
             }
         }
     },
+
+    getStage: function (room) {
+//        room.controller.level
+//        console.log(room.controller.level)
+    }
+
 }
 
 
