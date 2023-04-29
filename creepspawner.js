@@ -2,6 +2,7 @@
 
 const CREEPROLES = require('./SCREEP_DATA').CREEPROLES
 var screepsutils = require('./screepsutils')
+
 const SPHandler = {
 
     spawnAttacker: function(attackerMax, attackers, flagName) {
@@ -56,7 +57,6 @@ const SPHandler = {
 
 
         CreepSpawnList = Object.values(room.memory.CreepSpawnList);
-        console.log(typeof CreepSpawnList)
         if(harvesters < harvesterMax) {
             for(i = 0; i < harvesterMax - harvesters; i++) {
                 CreepSpawnList.push({

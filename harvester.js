@@ -10,7 +10,7 @@ var harvester = {
             creep.suicide();
             return;
         }
-        spawn = Game.rooms[creep.memory.home].find(FIND_MY_SPAWNS)[0];
+        const spawn = Game.rooms[creep.memory.home].find(FIND_MY_SPAWNS)[0];
         if(creep.room == Game.rooms[creep.memory.home]) {
             // Check if creep is carrying energy and if it's full
             if (creep.memory.harvesting && creep.store.getFreeCapacity() == 0) {

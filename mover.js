@@ -11,7 +11,7 @@ var mover = {
             return;
         }
 
-        spawn = Game.rooms[creep.memory.home].find(FIND_MY_SPAWNS)[0];
+        const spawn = Game.rooms[creep.memory.home].find(FIND_MY_SPAWNS)[0];
         if (creep.room == Game.rooms[creep.memory.home]) {
             if (creep.store.getFreeCapacity() != 0) {
                 var target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {

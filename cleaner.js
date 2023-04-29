@@ -1,7 +1,6 @@
 // Cleaner role
 var creepDeath = require('./creepspawner').HandleCreepDeath;
 
-isThere = false;
 var cleaner = {
     run: function(creep) {
         if (creep.memory.respawn && creep.ticksToLive <= 1 || creep.hits <= 0) {
