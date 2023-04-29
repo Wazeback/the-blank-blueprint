@@ -28,6 +28,32 @@ const screepUtils = {
         return AttackerAmount = _.filter(screeps, (creep) => creep.memory.role == 'attacker').length +
             _.filter(CreepSpawnList, (creep) => creep.creep.role == 'attacker').length;
     },
+    getTargetWithDestroy: function(creep, target) {
+        const path = PathFinder.search(creep.pos, { pos: target.pos, range: 1 });
+        if (!path && path.incomplete) return; 
+        const pathLength = path.path.length;
+        let obstacles = [];
+        for (let i = 0; i < pathLength; i++) {
+            const step = path.path[i];
+            const objectRoomPos = new RoomPosition(step.x, step.y, step.roomName)
+            var objects = objectRoomPos.look();
+            for (let j = 0; j < objects.length; j++) {
+                const object = objects[j];
+                if (object.type == "structure" && (
+                    object.structure.structureType === STRUCTURE_WALL ||
+                    object.structure.structureType === STRUCTURE_RAMPART ) ) {
+                    obstacles.push(object.structure);  
+                }
+            }
+        }
+        if(obstacles.length == 0) return;
+        const objectsWithPathDistance = obstacles.map((objectVAL) => {
+            const pathDistance = PathFinder.search(creep.pos, { pos: objectVAL.pos, range: 1 }).path.length;
+            return { objectVAL, pathDistance };
+        });
+        return objectsWithPathDistance.reduce((prev, curr) => {return prev.pathDistance < curr.pathDistance ? prev : curr;}).objectVAL;
+    }
+    
 }
 
 module.exports = screepUtils;

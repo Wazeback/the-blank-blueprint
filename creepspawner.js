@@ -8,7 +8,7 @@ const SPHandler = {
         for(i = 0; i < attackerMax - attackers; i++) {
           Game.rooms[flagName].memory.CreepSpawnList.push({
               creep: {
-                  bodyparts: [MOVE,MOVE,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK],
+                  bodyparts: [MOVE,MOVE,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK],
                   role: 'attacker',
                   prio: 1001,
                   home: flagName,

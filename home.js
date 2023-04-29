@@ -47,9 +47,9 @@ var home = {
     
     // TODO: fix spelling error HOSSTILE_ATTACKERS
     handleDefence: function(room) {
-        var HOSSTILE_ATTACKERS = room.find(FIND_HOSTILE_CREEPS);
+        const HOSTILE = room.find(FIND_HOSTILE_CREEPS);
 
-        if(HOSSTILE_ATTACKERS.length > 0) {
+        if(HOSTILE.length > 0) {
             defenderMax = 6;
         }
     },
