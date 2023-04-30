@@ -1,13 +1,13 @@
 var creepDeath = require('./creepspawner').HandleCreepDeath;
 var getTargetWithDestroy = require('./screepsutils').getTargetWithDestroy;
+const markedAsDead = false;
 
 var attacker = {
     run: function(creep) {
         // Handles Dying
-        if (creep.memory.respawn && creep.ticksToLive <= 1 || creep.hits <= 0) {
+        if (!markedAsDead && creep.memory.respawn && ( creep.ticksToLive <= 10 || creep.hits <= 10 )) {
+            markedAsDead = true;
             creepDeath(creep.memory);
-            delete Memory.creeps[creep.name];
-            creep.suicide();
             return;
         }
         if(!creep.memory.targetRoom) return;
@@ -15,48 +15,24 @@ var attacker = {
         if(creep.pos.roomName != targetRoom.pos.roomName) {
             const MoveToRoom =  new RoomPosition(targetRoom.pos.x, targetRoom.pos.y, targetRoom.pos.roomName);  
             creep.moveTo(MoveToRoom);
-            reep.memory.attacking = false;
             return;
-        } 
-
-
-        if (!creep.memory.target) {
-            const target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-            if (target) creep.memory.target = target.id;  
         }
-        if (creep.memory.target) {
-            const target = Game.getObjectById(creep.memory.target);
-            if (!target) { delete creep.memory.target; return; } // delete if it dead
-            // Check if creep is tired before issuing any move or attack commands
-            if (!creep.memory.attacking && creep.fatigue > 0) {
-                return;
-            }
-            // Attack the target from a safe distance
-            if (creep.pos.inRangeTo(target, 3)) {
-                creep.rangedAttack(target);
-                creep.memory.attacking = true;
-            } else {
-                var PathGenTarget = getTargetWithDestroy(creep, target);
-                if(!PathGenTarget) PathGenTarget = target;
-                if (creep.pos.inRangeTo(PathGenTarget.pos, 3)) {
-                    creep.rangedAttack(PathGenTarget);
-                    creep.memory.attacking = true;
-                } else { 
-                    creep.moveTo(PathGenTarget);
-                    creep.fatigue = 2;
-                    creep.memory.attacking = false;
-                }
-            }
-            // TODO: remember to add check for it it is a screep or a sturcture
-            if (creep.pos.inRangeTo(target.pos, 2)) {
-                const direction = target.pos.getDirectionTo(creep.pos);
-                const oppositeDirection = (direction + 3) % 8 + 1;
-                const oppositePos = creep.room.find(oppositeDirection, { range: 3 });
-                creep.moveTo(oppositePos);
-                // creep.fatigue = 2;
-                // creep.memory.attacking = false;
-            }
-        } 
+
+        // TODO: add a buddy system that heals
+
+        const target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        if (!target || creep.fatigue > 0) return;
+        if (!creep.memory.breakwall) { creep.memory.breakwall = getTargetWithDestroy(creep, target)}
+        if (!creep.memory.breakwall) {
+            if (creep.pos.inRangeTo(target.pos, 1)) { creep.attack(target); return; }
+            if (creep.pos.inRangeTo(target.pos, 2)) {creep.moveTo(creep.room.find((target.pos.getDirectionTo(creep.pos) + 3) % 8 + 1)); return;}
+            if (creep.pos.inRangeTo(target, 3)) {creep.rangedAttack(target); return; }
+            creep.moveTo(target);
+        } else {
+            const breakWall = creep.dismantle(creep.memory.breakwall)
+            if (breakWall == ERR_INVALID_TARGET) { creep.memory.breakwall = false; return;}
+            if (breakWall == ERR_NOT_IN_RANGE) { creep.moveTo(creep.memory.breakwall); }
+        }
     }
 }
 
