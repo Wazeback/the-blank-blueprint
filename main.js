@@ -1,32 +1,39 @@
 var utils =  require('./utils');
 var home = require('./home');
 var handleFlags = require('./handleflags')
-// TODO: make a variable for every room that checks if the room is being attacked then send help.
+
+let tickCounter = 0;
+
+if (!Memory.scoutRooms) Memory.scoutRooms = {};
+if (!Memory.ignore) Memory.ignore = {
+    Gino: {
+        rooms: ["W9N6",
+        ]
+    }
+}
+
+// TODO: !!!!!!!! ROLES STILL GO TO SET RESOURCES
 
 module.exports.loop = function () {
-    global.Tmp = {}
-    global.Stats = {}
+    global.Tmp = {};
+    global.Stats = {};
+    tickCounter++;
 
-    // for (const creepName in Memory.creeps) {
-    //     // If the creep is dead, remove its memory object
-    //     if (!Game.creeps[creepName]) {
-    //       delete Memory.creeps[creepName];
-    //     }
-    // }
 
-    if (!Memory.flags) Memory.flags = {}
+    if (tickCounter % 10 === 0) handleFlags.run();
+    if (tickCounter % 100 === 0) {
+        for (const creepName in Memory.creeps) {
+            if (!Game.creeps[creepName]) delete Memory.creeps[creepName];
+        }
+    }
+    
     const creepsByHome = utils.splitScreepsByHome();
     const myHomes = utils.getMyHomes();
     const myHomesLength = myHomes.length;
     const helpList = utils.getHelpList();
+    // TODO: make a variable for every room that checks if the room is being attacked then send help.
     const helpListLength = helpList.length
 
-
-    try {
-        handleFlags.run();
-      } catch(error) {
-        console.log('Error caught:', error);
-      }
 
     for (let i = 0; i < myHomesLength; i++) {
         const baseHome = myHomes[i];

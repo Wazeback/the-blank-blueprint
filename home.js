@@ -2,18 +2,20 @@ var harvester = require('./harvester');
 var upgrader = require('./upgrader');
 var builder = require('./builder');
 var repairer = require('./repairer');
+var mover = require('./mover');
 var defender = require('./defender');
-
 var rangedbuilder = require('./rangedbuilder');
 var rangeddefender =  require('./rangeddefender')
 
 var attacker = require('./attacker');
 var cleaner = require('./cleaner');
 var wallbreaker = require('./wallbreaker');
-var mover = require('./mover');
+var scout = require('./scout');
+
 
 var creepspawner = require('./creepspawner');
 var getDefenderAmount = require('./screepsutils').getDefenderAmount;
+
 var home = {
     run: function(home, creeps) {
         this.handleStage(home, creeps);
@@ -73,7 +75,7 @@ var home = {
         }
     },
     // TODO: remember to add to spawnList instead for global stuff
-    help: function(home, creeps, help) { // Function happens when another rooms spawn is dead
+    help: function(home, creeps, help) {
         var spawn = Game.rooms[home.name].find(FIND_MY_SPAWNS)[0];
         if (spawn) {
             var rangedbuilderAmount = _.filter(creeps, (creep) => creep.memory.role === 'rangedbuilder');

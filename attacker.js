@@ -14,12 +14,13 @@ var attacker = {
         const targetRoom = creep.memory.targetRoom;
         if(creep.pos.roomName != targetRoom.pos.roomName) {
             const MoveToRoom =  new RoomPosition(targetRoom.pos.x, targetRoom.pos.y, targetRoom.pos.roomName);  
-            creep.moveTo(MoveToRoom);
+            if(creep.moveTo(MoveToRoom, {reusePath: 50}) == ERR_NO_PATH) {
+                let path = creep.pos.findPathTo(MoveToRoom, {maxOps: 200});
+                creep.moveByPath(path)
+            }
             return;
         }
-
         // TODO: add a buddy system that heals
-
         const target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (!target || creep.fatigue > 0) return;
         if (!creep.memory.breakwall) { creep.memory.breakwall = getTargetWithDestroy(creep, target)}
@@ -29,9 +30,10 @@ var attacker = {
             if (creep.pos.inRangeTo(target, 3)) {creep.rangedAttack(target); return; }
             creep.moveTo(target);
         } else {
-            const breakWall = creep.dismantle(creep.memory.breakwall)
+            const wall = Game.getObjectById(creep.memory.breakwall.id)
+            const breakWall = creep.dismantle(wall)
             if (breakWall == ERR_INVALID_TARGET) { creep.memory.breakwall = false; return;}
-            if (breakWall == ERR_NOT_IN_RANGE) { creep.moveTo(creep.memory.breakwall); }
+            if (breakWall == ERR_NOT_IN_RANGE) { creep.moveTo(wall); }
         }
     }
 }

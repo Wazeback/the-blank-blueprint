@@ -5,15 +5,15 @@ var screepsutils = require('./screepsutils')
 
 const SPHandler = {
 
-    spawnAttacker: function(attackerMax, attackers, flagName) {
+    spawnAttacker: function(attackerMax, attackers, home, fullFlagName) {
         for(i = 0; i < attackerMax - attackers; i++) {
-          Game.rooms[flagName].memory.CreepSpawnList.push({
+          Game.rooms[home].memory.CreepSpawnList.push({
               creep: {
-                  bodyparts: [MOVE,MOVE,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK],
+                  bodyparts: [MOVE,MOVE,WORK,WORK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,ATTACK,ATTACK,ATTACK,MOVE],
                   role: 'attacker',
                   prio: 1001,
-                  home: flagName,
-                  targetRoom: Game.flags[flagName],
+                  home: home,
+                  targetRoom: Game.flags[fullFlagName],
                   respawn: false,
               }
           }
@@ -47,6 +47,7 @@ const SPHandler = {
         const defenderMax = 1;
         const repairerMax = 2;
         const moverMax = 2;
+        const scoutMax = 1;
 
         const harvesters = screepsutils.getHarvesterRespawnAmount(screeps, CreepSpawnList);
         const builders = screepsutils.getBuilderRespawnAmount(screeps, CreepSpawnList);
@@ -54,7 +55,8 @@ const SPHandler = {
         const repairers = screepsutils.getRepairerRespawnAmount(screeps, CreepSpawnList);
         const defenders = screepsutils.getDefenderRespawnAmount(screeps, CreepSpawnList);
         const movers = screepsutils.getMoverRespawnAmount(screeps, CreepSpawnList);
-
+        // TODO: remember to disable scout afther condition, scouts are very expensive.
+        const scouts = screepsutils.getScoutRespawnAmount(screeps, CreepSpawnList);
 
         CreepSpawnList = Object.values(room.memory.CreepSpawnList);
         if(harvesters < harvesterMax) {
@@ -110,7 +112,7 @@ const SPHandler = {
             }
         }
         if(repairers < repairerMax) {
-            for(i = 0; i < repairerMax - repairers ; i++) {
+            for(i = 0; i < repairerMax - repairers; i++) {
                 CreepSpawnList.push({
                     creep: {
                         bodyparts: [],
@@ -134,6 +136,19 @@ const SPHandler = {
                     } 
                 });   
             }     
+        }
+        if(scouts < scoutMax) {
+            for(i = 0; i < scoutMax - scouts ; i++) {
+                CreepSpawnList.push({
+                    creep: {
+                        bodyparts: [],
+                        role: 'scout',
+                        prio: 55,
+                        home: room.name,
+                        respawn: true,
+                    } 
+                })
+            }
         }
         room.memory.CreepSpawnList = CreepSpawnList;
     }

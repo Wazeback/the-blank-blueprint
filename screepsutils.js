@@ -24,6 +24,10 @@ const screepUtils = {
         return _.filter(screeps, (creep) => creep.memory.role == 'mover' && creep.memory.respawn == true).length +
         _.filter(CreepSpawnList, (creep) => creep.creep.role == 'mover' && creep.creep.respawn == true).length;
     },
+    getScoutRespawnAmount: function(screeps, CreepSpawnList) {
+        return _.filter(screeps, (creep) => creep.memory.role == 'scout' && creep.memory.respawn == true).length +
+        _.filter(CreepSpawnList, (creep) => creep.creep.role == 'scout' && creep.creep.respawn == true).length;
+    },
     getAttackerAmount: function(screeps, CreepSpawnList) {
         return _.filter(screeps, (creep) => creep.memory.role == 'attacker').length +
             _.filter(CreepSpawnList, (creep) => creep.creep.role == 'attacker').length;
@@ -33,7 +37,7 @@ const screepUtils = {
         _.filter(CreepSpawnList, (creep) => creep.creep.role == 'defender').length;
     },
     getTargetWithDestroy: function(creep, target) {
-        const path = PathFinder.search(creep.pos, { pos: target.pos, range: 1 });
+        const path = PathFinder.search(creep.pos, { pos: target.pos, range: 3 });
         if (!path && path.incomplete) return; 
         const pathLength = path.path.length;
         let obstacles = [];
