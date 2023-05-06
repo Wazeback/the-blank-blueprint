@@ -82,10 +82,10 @@ var home = {
             var rangedbuilderAmount = _.filter(creeps, (creep) => creep.memory.role === 'rangedbuilder');
             var rangeddefederAmount = _.filter(creeps, (creep) => creep.memory.role === 'rangeddefender');
 
-            if( rangeddefederAmount.length < 0 && stage > 3) {
+            if( rangeddefederAmount.length < 0 &&  home.memory.stage > 3) {
                 spawn.spawnCreep([MOVE,MOVE,MOVE,MOVE,MOVE,ATTACK,ATTACK,ATTACK], 'RangedDefender' + Game.time, {memory: {role: 'rangeddefender', home: home.name, help: help.name} });
-            } else if( rangedbuilderAmount.length < 2 && stage > 3) {
-                spawn.spawnCreep(HarvesterStage[stage], 'RangedBuilder' + Game.time, {memory: {role: 'rangedbuilder', home: home.name, help: help.name} });
+            } else if( rangedbuilderAmount.length < 2 &&  home.memory.stage > 3) {
+                spawn.spawnCreep(HarvesterStage[home.memory.stage], 'RangedBuilder' + Game.time, {memory: {role: 'rangedbuilder', home: home.name, help: help.name} });
             }
         }
     },
