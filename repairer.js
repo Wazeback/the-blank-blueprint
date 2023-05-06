@@ -20,7 +20,7 @@ var repairer = {
         if (!creep.memory.repairer) {
             var target = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return structure.structureType == STRUCTURE_RAMPART;
+                    return structure.structureType == STRUCTURE_RAMPART && structure.structureType == STRUCTURE_ROAD;
                 }
             }).sort((a, b) => a.hits - b.hits);
             if(target.length > 0) {

@@ -17,8 +17,16 @@ var roomclaimer = require('./roomclaimer')
 var creepspawner = require('./creepspawner');
 var getDefenderAmount = require('./screepsutils').getDefenderAmount;
 
+var buildManager = require ('./manager_build')
+
 var home = {
     run: function(home, creeps) {
+        if (!home.memory.spawnpos) {
+            const spawn = home.find(FIND_MY_SPAWNS)[0];
+            if (spawn) {
+            home.memory.spawnpos = spawn.pos;
+    }
+        }
         this.handleStage(home, creeps);
         this.handleDefence(home, creeps)
         
@@ -27,6 +35,8 @@ var home = {
         })
 
         creepspawner.HandleSpawnCreep(home)
+
+        buildManager.run(home)
 
     },
     handleStage: function(room, homeCreeps) {
@@ -89,6 +99,7 @@ var home = {
             }
         }
     },
+
 }
 
 
