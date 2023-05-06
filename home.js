@@ -26,7 +26,6 @@ var home = {
         }
         this.handleStage(home, creeps);
         this.handleDefence(home)
-        this.getStage(home)
         
         _.forEach(creeps, (creep) => {
             eval(creep.memory.role).run(creep);
@@ -78,11 +77,6 @@ var home = {
             }
         }
     },
-
-    getStage: function (room) {
-//        room.controller.level
-//        console.log(room.controller.level)
-    }
 
 }
 

@@ -28,11 +28,11 @@ const SPHandler = {
         if(!CreepSpawnList) { room.memory.CreepSpawnList = [] };
 
         const harvesterMax = room.find(FIND_SOURCES).length * 2;
-        const upgraderMax = 2;
-        const builderMax = 2; // TODO: amount of builders based on construction site
+        const upgraderMax = 3;
+        const builderMax = 3; // TODO: amount of builders based on construction site
         const defenderMax = 1;
         const repairerMax = 2;
-        const moverMax = 2;
+        const moverMax = 0;
 
         const harvesters = screepsutils.getHarvesterRespawnAmount(screeps, CreepSpawnList);
         const builders = screepsutils.getBuilderRespawnAmount(screeps, CreepSpawnList);
