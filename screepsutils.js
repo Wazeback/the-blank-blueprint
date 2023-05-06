@@ -28,6 +28,10 @@ const screepUtils = {
         return _.filter(screeps, (creep) => creep.memory.role == 'scout' && creep.memory.respawn == true).length +
         _.filter(CreepSpawnList, (creep) => creep.creep.role == 'scout' && creep.creep.respawn == true).length;
     },
+    getRoomClaimerRespawnAmount:function(screeps, CreepSpawnList) {
+        return _.filter(screeps, (creep) => creep.memory.role == 'roomclaimer' && creep.memory.respawn == true).length +
+        _.filter(CreepSpawnList, (creep) => creep.creep.role == 'roomclaimer' && creep.memory.respawn == true).length;
+    },
     getAttackerAmount: function(screeps, CreepSpawnList) {
         return _.filter(screeps, (creep) => creep.memory.role == 'attacker').length +
             _.filter(CreepSpawnList, (creep) => creep.creep.role == 'attacker').length;
@@ -36,6 +40,35 @@ const screepUtils = {
         return _.filter(screeps, (creep) => creep.memory.role == 'defender').length +
         _.filter(CreepSpawnList, (creep) => creep.creep.role == 'defender').length;
     },
+    getHarvesterAmount: function(screeps, CreepSpawnList) {
+        return _.filter(screeps, (creep) => creep.memory.role == 'harvester').length +
+            _.filter(CreepSpawnList, (creep) => creep.creep.role == 'harvester').length;
+    },
+    getUpgraderAmount: function(screeps, CreepSpawnList) { 
+        return _.filter(screeps, (creep) => creep.memory.role == 'upgrader').length +
+            _.filter(CreepSpawnList, (creep) => creep.creep.role == 'upgrader').length;
+    },
+    getBuilderAmount: function(screeps, CreepSpawnList) { 
+        return  _.filter(screeps, (creep) => creep.memory.role == 'builder').length +
+            _.filter(CreepSpawnList, (creep) => creep.creep.role == 'builder').length;
+    },
+    getRepairerAmount: function(screeps, CreepSpawnList) { 
+        return _.filter(screeps, (creep) => creep.memory.role == 'repairer').length +
+         _.filter(CreepSpawnList, (creep) => creep.creep.role == 'repairer').length;
+    },
+    getMoverAmount: function(screeps, CreepSpawnList) {
+        return _.filter(screeps, (creep) => creep.memory.role == 'mover').length +
+        _.filter(CreepSpawnList, (creep) => creep.creep.role == 'mover').length;
+    },
+    getScoutAmount: function(screeps, CreepSpawnList) {
+        return _.filter(screeps, (creep) => creep.memory.role == 'scout').length +
+        _.filter(CreepSpawnList, (creep) => creep.creep.role == 'scout').length;
+    },
+    getRoomClaimerAmount:function(screeps, CreepSpawnList) {
+        return _.filter(screeps, (creep) => creep.memory.role == 'roomclaimer').length +
+        _.filter(CreepSpawnList, (creep) => creep.creep.role == 'roomclaimer').length;
+    },
+
     getTargetWithDestroy: function(creep, target) {
         const path = PathFinder.search(creep.pos, { pos: target.pos, range: 3 });
         if (!path && path.incomplete) return; 
@@ -60,8 +93,7 @@ const screepUtils = {
             return { objectVAL, pathDistance };
         });
         return objectsWithPathDistance.reduce((prev, curr) => {return prev.pathDistance < curr.pathDistance ? prev : curr;}).objectVAL;
-    }
-    
+    },
 }
 
 module.exports = screepUtils;

@@ -13,6 +13,7 @@ if (!Memory.ignore) Memory.ignore = {
 }
 
 // TODO: !!!!!!!! ROLES STILL GO TO SET RESOURCES
+// TODO: add a glabal const that hold all the max amount of screeps.
 
 module.exports.loop = function () {
     global.Tmp = {};
@@ -20,13 +21,13 @@ module.exports.loop = function () {
     tickCounter++;
 
 
-    if (tickCounter % 10 === 0) handleFlags.run();
+    if (tickCounter % 20 === 0) handleFlags.run();
     if (tickCounter % 100 === 0) {
         for (const creepName in Memory.creeps) {
             if (!Game.creeps[creepName]) delete Memory.creeps[creepName];
         }
     }
-    
+   
     const creepsByHome = utils.splitScreepsByHome();
     const myHomes = utils.getMyHomes();
     const myHomesLength = myHomes.length;

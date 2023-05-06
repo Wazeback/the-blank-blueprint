@@ -11,6 +11,7 @@ var attacker = require('./attacker');
 var cleaner = require('./cleaner');
 var wallbreaker = require('./wallbreaker');
 var scout = require('./scout');
+var roomclaimer = require('./roomclaimer')
 
 
 var creepspawner = require('./creepspawner');

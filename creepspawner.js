@@ -11,7 +11,7 @@ const SPHandler = {
               creep: {
                   bodyparts: [MOVE,MOVE,WORK,WORK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,ATTACK,ATTACK,ATTACK,MOVE],
                   role: 'attacker',
-                  prio: 1001,
+                  prio: 101,
                   home: home,
                   targetRoom: Game.flags[fullFlagName],
                   respawn: false,
@@ -19,6 +19,21 @@ const SPHandler = {
           }
         );    
       }
+    },
+    spawnRoomClaimer: function(claimerMax, claimers, home, fullFlagName) {
+        for(i = 0; i < claimerMax - claimers; i++) {
+            Game.rooms[home].memory.CreepSpawnList.push({
+                creep: {
+                    bodyparts: [MOVE,MOVE,CLAIM,CLAIM],
+                    role: 'roomclaimer',
+                    prio: 400,
+                    home: home,
+                    targetRoom: fullFlagName,
+                    respawn: false,
+                }
+            }
+          );    
+        }
     },
     HandleSpawnCreep: function(room) {
         var CreepSpawnList = room.memory.CreepSpawnList;

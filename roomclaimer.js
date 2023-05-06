@@ -10,9 +10,8 @@ var roomclaimer = {
             return;
         }
         if(!creep.memory.targetRoom) return;
-        const targetRoom = creep.memory.targetRoom;
-        if(creep.pos.roomName != targetRoom.pos.roomName) {
-            const MoveToRoom =  new RoomPosition(targetRoom.pos.x, targetRoom.pos.y, targetRoom.pos.roomName);  
+        if(creep.pos.roomName != creep.memory.targetRoom) {
+            const MoveToRoom =  new RoomPosition(25, 25, creep.memory.targetRoom);  
             if(creep.moveTo(MoveToRoom, {reusePath: 50}) == ERR_NO_PATH) {
                 let path = creep.pos.findPathTo(MoveToRoom, {maxOps: 200});
                 creep.moveByPath(path)
