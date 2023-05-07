@@ -19,10 +19,10 @@ var upgrader = {
         }
         // If creep is carrying energy, take it to the nearest spawn or extension
         if (!creep.memory.upgrader) {
-            var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {filter: (s) => (s.structureType == STRUCTURE_CONTROLLER)});
+            var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {filter: (s) => (s.structureType == STRUCTURE_CONTROLLER), range: 3});
             if (target) {
                 if (creep.upgradeController(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}, range: 3});
+                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
         }
