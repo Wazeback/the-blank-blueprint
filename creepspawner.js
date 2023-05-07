@@ -56,7 +56,7 @@ const SPHandler = {
         var CreepSpawnList = room.memory.CreepSpawnList;
         if(!CreepSpawnList) { room.memory.CreepSpawnList = [] };
 
-        const harvesterMax = room.find(FIND_SOURCES).length * 2;
+        const harvesterMax = room.find(FIND_SOURCES).length;
         const upgraderMax = 3;
         const builderMax = 3; // TODO: amount of builders based on construction site
         const defenderMax = 1;

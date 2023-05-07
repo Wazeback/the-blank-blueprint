@@ -22,7 +22,7 @@ var upgrader = {
             var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {filter: (s) => (s.structureType == STRUCTURE_CONTROLLER)});
             if (target) {
                 if (creep.upgradeController(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}, range: 3});
                 }
             }
         }
