@@ -21,6 +21,14 @@ module.exports.loop = function () {
     tickCounter++;
 
 
+    // for (const constructionSiteId in Game.constructionSites) {
+    //     const constructionSite = Game.constructionSites[constructionSiteId];
+    //     if (constructionSite.my) {
+    //       constructionSite.remove();
+    //     }
+    //   }
+
+
     if (tickCounter % 20 === 0) handleFlags.run();
     if (tickCounter % 100 === 0) {
         for (const creepName in Memory.creeps) {

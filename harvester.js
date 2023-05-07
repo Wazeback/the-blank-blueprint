@@ -45,27 +45,13 @@ var harvester = {
             }
             // If creep is not carrying energy, go to the nearest energy place and harvest / withdraw
             else {
-                // find closest container
-                let container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: s => s.structureType == STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] > 10
-                });
-                // if one was found
-                if (container != undefined) {
-                    // try to withdraw energy, if the container is not in range
-                    if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(container);
-                    }
-                } else {
                     var sources = creep.room.find(FIND_SOURCES);
                     // var sources = creep.room.find(FIND_SOURCES);
                     if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
                     }
-                }
             }
-        } else {
-            creep.moveTo(spawn)
-        }
+        } else creep.moveTo(spawn)
     }
 };
 

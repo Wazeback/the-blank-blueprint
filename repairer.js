@@ -27,6 +27,9 @@ var repairer = {
                 if(creep.repair(target[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target[0]);
                 }
+            } 
+            else {
+                creep.moveTo(creep.room.controller)
             }
         }
         // If creep is not carrying energy, go to the nearest energy source and harvest

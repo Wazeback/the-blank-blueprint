@@ -35,9 +35,7 @@ var mover = {
                     creep.moveTo(spawn);
                 }
             }
-        } else {
-            creep.moveTo(spawn);
-        }
+        } else creep.moveTo(spawn);
     }
 };
 

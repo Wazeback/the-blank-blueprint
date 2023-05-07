@@ -19,7 +19,6 @@ var roomclaimer = {
             return;
         }
         target = creep.room.controller;
-
         if (claim) {
             switch(creep.claimController(target)) {
                 case OK:

@@ -54,6 +54,11 @@ module.exports.CREEPROLES = {
         [MOVE,MOVE,MOVE],
         [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
         [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+    ],
+    rangedbuilder: [
+        [CARRY, WORK, MOVE],
+        [MOVE,MOVE,CARRY,CARRY,WORK,WORK],
+        [MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,WORK,WORK,WORK,WORK],
     ]
 }
 

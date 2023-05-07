@@ -16,17 +16,21 @@ var roomclaimer = require('./roomclaimer')
 
 var creepspawner = require('./creepspawner');
 var getDefenderAmount = require('./screepsutils').getDefenderAmount;
+var getRangedBuilderAmount = require('./screepsutils').getRangedBuilderAmount
 
 var buildManager = require ('./manager_build')
 
 var home = {
     run: function(home, creeps) {
+
+        // TODO: find a place to place a spawn
+        // BUG: prop wont work to get the name of a object.
         if (!home.memory.spawnpos) {
             const spawn = home.find(FIND_MY_SPAWNS)[0];
-            if (spawn) {
-            home.memory.spawnpos = spawn.pos;
-    }
+            if (spawn) home.memory.spawnpos = spawn.pos;
+             else home.memory.spawnpos = new RoomObject(25,25, home.name)
         }
+
         this.handleStage(home, creeps);
         this.handleDefence(home, creeps)
         
@@ -35,7 +39,6 @@ var home = {
         })
 
         creepspawner.HandleSpawnCreep(home)
-
         buildManager.run(home)
 
     },
@@ -55,6 +58,7 @@ var home = {
 
         if (room.memory.stage != room.memory.oldStage || Game.time - room.memory.lastCreepSpawnTick >= 20) {
             creepspawner.HandleInitCreeps(room, homeCreeps);
+            
             room.memory.oldStage = room.memory.stage;
             room.memory.lastCreepSpawnTick = Game.time; // Record the tick when creeps were last spawned
         } 
@@ -88,16 +92,21 @@ var home = {
     // TODO: remember to add to spawnList instead for global stuff
     help: function(home, creeps, help) {
         var spawn = Game.rooms[home.name].find(FIND_MY_SPAWNS)[0];
-        if (spawn) {
-            var rangedbuilderAmount = _.filter(creeps, (creep) => creep.memory.role === 'rangedbuilder');
-            var rangeddefederAmount = _.filter(creeps, (creep) => creep.memory.role === 'rangeddefender');
-
-            if( rangeddefederAmount.length < 0 &&  home.memory.stage > 3) {
-                spawn.spawnCreep([MOVE,MOVE,MOVE,MOVE,MOVE,ATTACK,ATTACK,ATTACK], 'RangedDefender' + Game.time, {memory: {role: 'rangeddefender', home: home.name, help: help.name} });
-            } else if( rangedbuilderAmount.length < 2 &&  home.memory.stage > 3) {
-                spawn.spawnCreep(HarvesterStage[home.memory.stage], 'RangedBuilder' + Game.time, {memory: {role: 'rangedbuilder', home: home.name, help: help.name} });
-            }
-        }
+        if (!spawn) return;
+        const rangedbuilders = getRangedBuilderAmount(creeps, home.memory.CreepSpawnList)
+        if(rangedbuilders < 1) {
+            home.memory.CreepSpawnList.push({
+                creep: {
+                    bodyparts: [],
+                    role: 'rangedbuilder',
+                    prio: 200,
+                    home: home.name,
+                    respawn: false,
+                    targetRoom: help.name,
+                }
+            });
+        };
+        
     },
 
 }
