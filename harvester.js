@@ -28,14 +28,14 @@ var harvester = {
                                 structure.structureType == STRUCTURE_CONTAINER &&
                                 structure.structureType == STRUCTURE_STORAGE) &&
                                 structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                    }, range: 3
+                    }
                 });
                 if (target) {
                     if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
                     }
                 } else {
-                      var target = creep.room.controller;
+                    var target = creep.room.controller;
                     if (target) {
                         if (creep.upgradeController(target) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});

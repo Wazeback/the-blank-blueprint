@@ -19,10 +19,10 @@ var upgrader = {
         }
         // If creep is carrying energy, take it to the nearest spawn or extension
         if (!creep.memory.upgrader) {
-             var target = creep.room.controller;
+            var target = creep.room.controller;
             if (target) {
                 if (creep.upgradeController(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}, range: 3});
                 }
             }
         }
