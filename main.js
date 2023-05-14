@@ -1,19 +1,15 @@
 var utils =  require('./utils');
 var home = require('./home');
 var handleFlags = require('./handleflags')
-
+var IGNORE_LIST = require('./IGNORE_LIST').IGNORE_LIST
 let tickCounter = 0;
 
 if (!Memory.scoutRooms) Memory.scoutRooms = {};
-if (!Memory.ignore) Memory.ignore = {
-    Gino: {
-        rooms: ["W9N6",
-        ]
-    }
-}
+if (!Memory.ignore) Memory.ignore = IGNORE_LIST;
 
-// TODO: !!!!!!!! ROLES STILL GO TO SET RESOURCES
-// TODO: add a glabal const that hold all the max amount of screeps.
+// TODO: !!!!!!!! ROLES STILL GO TO SET RESOURCES.. || halfway done just need to apply it to extra screep roles
+// TODO: make sure the scout and roomclaimer dont spawn in if ur below level 5 or something
+// TODO: remmeber to remove flags when room is claimed
 
 module.exports.loop = function () {
     global.Tmp = {};
@@ -21,6 +17,7 @@ module.exports.loop = function () {
     tickCounter++;
 
 
+    
     // for (const constructionSiteId in Game.constructionSites) {
     //     const constructionSite = Game.constructionSites[constructionSiteId];
     //     if (constructionSite.my) {
@@ -28,6 +25,25 @@ module.exports.loop = function () {
     //     }
     //   }
 
+    // const room = Game.rooms["W8N4"]
+
+    //     // Remove all storage structures
+    //     const storages = room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_STORAGE } });
+    //     for (const storage of storages) {
+    //     storage.destroy();
+    //     }
+
+    //     // Remove all extension structures
+    //     const extensions = room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_EXTENSION } });
+    //     for (const extension of extensions) {
+    //     extension.destroy();
+    //     }
+
+    //     // Remove all road structures
+    //     const roads = room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_ROAD } });
+    //     for (const road of roads) {
+    //     road.destroy();
+    //     }
 
     if (tickCounter % 20 === 0) handleFlags.run();
     if (tickCounter % 100 === 0) {

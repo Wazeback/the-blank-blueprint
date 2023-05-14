@@ -1,5 +1,7 @@
-// Upgrader role
+const { sortBy } = require('lodash');
+
 var creepDeath = require('./creepspawner').HandleCreepDeath;
+var getBestSource = require('./screepsutils').getBestSource;
 let markedAsDead = false;
 
 var upgrader = {
@@ -9,29 +11,55 @@ var upgrader = {
             creepDeath(creep.memory);
             return;
         }
-         // Check if creep is carrying energy and if it's full
-         if (creep.memory.upgrader && creep.store.getFreeCapacity() == 0) {
-            creep.memory.upgrader = false;
-        }
-        // Check if creep is not carrying energy and if it's empty
-        if (!creep.memory.upgrader && creep.store[RESOURCE_ENERGY] == 0) {
-            creep.memory.upgrader = true;
-        }
-        // If creep is carrying energy, take it to the nearest spawn or extension
-        if (!creep.memory.upgrader) {
-            var target = creep.room.controller;
-            if (target) {
-                if (creep.upgradeController(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}, range: 3});
+        const spawn = Game.rooms[creep.memory.home].find(FIND_MY_SPAWNS)[0];
+        if (creep.room == Game.rooms[creep.memory.home]) { 
+            // Check if creep is carrying energy and if it's full
+            if (creep.memory.upgrader && creep.store.getFreeCapacity() == 0) {
+                creep.memory.upgrader = false;
+                creep.memory.target = false;
+            }
+            // Check if creep is not carrying energy and if it's empty
+            if (!creep.memory.upgrader && creep.store[RESOURCE_ENERGY] == 0) {
+                creep.memory.upgrader = true;
+                creep.memory.target = false;
+            }
+            if (!creep.memory.target) {
+                const targetStructure = creep.room.controller;
+                if (targetStructure) {
+                    creep.memory.target = targetStructure.id;
+                    creep.memory.targetSource = getBestSource(creep, creep.memory.home, targetStructure);
+                } else {
+                    creep.memory.target = false;
+                    return;
                 }
             }
-        }
-        // If creep is not carrying energy, go to the nearest energy source and harvest
-        else {
-            var sources = creep.room.find(FIND_SOURCES);
-            if (creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffaa00'}});
+            // If creep is carrying energy, take it to the nearest spawn or extension
+            if (!creep.memory.upgrader) {
+                let target = Game.getObjectById(creep.memory.target);
+                if (target) {
+                    if (creep.upgradeController(target) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}, range: 3});
+                    }
+                }
             }
+            // If creep is not carrying energy, go to the nearest energy source and harvest
+            else {
+                var source = Game.getObjectById(creep.memory.targetSource);
+                if(creep.memory.target.pos) {
+                    if(!source || source.energy < creep.store.getFreeCapacity(RESOURCE_ENERGY)) 
+                    creep.memory.targetSource = getBestSource(creep, creep.memory.home, Game.getObjectById(creep.memory.target));
+                }
+                if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                    if(creep.moveTo(source.pos), {reusePath: 50}, {noPathFinding: true} !=  0) {
+                        if(creep.moveTo(source.pos), {reusePath: 50}, {noPathFinding: true} != -11) {
+                            creep.moveTo(source.pos)
+                        }
+                    }
+                }
+            }    
+        }
+        else {
+            creep.moveTo(spawn);
         }
     }
 };

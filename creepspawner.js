@@ -56,13 +56,36 @@ const SPHandler = {
         var CreepSpawnList = room.memory.CreepSpawnList;
         if(!CreepSpawnList) { room.memory.CreepSpawnList = [] };
 
-        const harvesterMax = room.find(FIND_SOURCES).length;
-        const upgraderMax = 3;
-        const builderMax = 3; // TODO: amount of builders based on construction site
-        const defenderMax = 1;
-        const repairerMax = 2;
-        const moverMax = 2;
-        const scoutMax = 1;
+        // const harvesterMax = room.find(FIND_SOURCES).length; //TODO: base of amount of free spaces in room.memory.sources.validSourcesPos.length min 2 max: 4
+        // const upgraderMax = 3; // TODO: unless lvl 8 is reached then make it 1;
+        // const builderMax = 3; // TODO: amount of builders based on construction site max 3 min 1;
+        // const defenderMax = 1;
+        // const repairerMax = 2; // TODO: based on the amount of of ramparts / stutures ( not roads) in room;
+        // const moverMax = 2; // TODO: based on if there is a storage unit places down
+        // const scoutMax = 1; // TODO: remember to disable scout based on tag in memory, scouts are very CPU expensive.
+
+
+        let harvesterMax = 0;
+        let maxFreeSpaces = 0;
+        for (const source in room.memory.sources) {
+            const freeSpaces = room.memory.sources[source].validHarvesterPos.length;
+            if (freeSpaces > maxFreeSpaces) {
+                maxFreeSpaces = freeSpaces;
+                harvesterMax = Math.min(4, freeSpaces);
+            }
+        }
+        const upgraderMax = room.controller.level < 8 ? 3 : 1; // Max 3 upgraders until level 8, then 1 upgrader
+        const constructionSites = room.find(FIND_CONSTRUCTION_SITES);
+        const energyRequired = _.sum(constructionSites, site => site.progressTotal - site.progress);
+        const builderMax = Math.max(1, Math.min(3, Math.ceil(energyRequired /   (1 + room.memory.oldStage ) * 150)));
+        const defenderMax = 1; // Max 1 defender
+        const ramparts = room.find(FIND_MY_STRUCTURES, { filter: { structureType: STRUCTURE_RAMPART } });
+        const repairerMax = Math.max(1, Math.min(2, ramparts.length)); // Max 2 repairers, based on the number of ramparts in the room
+        const storage = room.storage;
+        const moverMax = storage ? 2 : 1; // Max 2 movers if there is a storage, 1 mover otherwise
+        const scoutMax = 1; // Max 1 scout
+
+
 
         const harvesters = screepsutils.getHarvesterRespawnAmount(screeps, CreepSpawnList);
         const builders = screepsutils.getBuilderRespawnAmount(screeps, CreepSpawnList);
@@ -70,7 +93,6 @@ const SPHandler = {
         const repairers = screepsutils.getRepairerRespawnAmount(screeps, CreepSpawnList);
         const defenders = screepsutils.getDefenderRespawnAmount(screeps, CreepSpawnList);
         const movers = screepsutils.getMoverRespawnAmount(screeps, CreepSpawnList);
-        // TODO: remember to disable scout afther condition, scouts are very expensive.
         const scouts = screepsutils.getScoutRespawnAmount(screeps, CreepSpawnList);
 
         CreepSpawnList = Object.values(room.memory.CreepSpawnList);

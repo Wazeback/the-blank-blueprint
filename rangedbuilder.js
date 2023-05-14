@@ -39,7 +39,8 @@ var rangedbuilder = {
             if (spawnsInRoom.length > 0 || spawnSitesInRoom.length > 0) {
                 var target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             } else {
-                getBestSpawnLocation(creep.room).createConstructionSite(STRUCTURE_SPAWN);
+                getBestSpawnLocation(creep.room);
+                
             }
             if (target) {
                 if (creep.build(target) == ERR_NOT_IN_RANGE) {
@@ -65,6 +66,7 @@ var rangedbuilder = {
             }
         }
     }
+    
 }
 
 

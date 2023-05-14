@@ -1,4 +1,5 @@
 var creepDeath = require('./creepspawner').HandleCreepDeath;
+var signTexts = require('./SCREEP_DATA').SIGN_TEXTS;
 const markedAsDead = false;
 var claim = true;
 var roomclaimer = {
@@ -9,6 +10,10 @@ var roomclaimer = {
             creepDeath(creep.memory);
             return;
         }
+
+        if(creep.memory.home == creep.pos.roomName &&
+        ( !creep.room.controller.sign || creep.room.controller.sign.text != signTexts[0]))
+            {creep.signController(creep.room.controller, signTexts[0]) }
         if(!creep.memory.targetRoom) return;
         if(creep.pos.roomName != creep.memory.targetRoom) {
             const MoveToRoom =  new RoomPosition(25, 25, creep.memory.targetRoom);  
@@ -18,7 +23,12 @@ var roomclaimer = {
             }
             return;
         }
+
+        
         target = creep.room.controller;
+        if(!target.sign || target.sign.username != creep.owner.username) {
+            creep.signController(target, signTexts[Math.floor(Math.random() * (signTexts.length - 1)) + 1]);
+        }
         if (claim) {
             switch(creep.claimController(target)) {
                 case OK:
