@@ -33,9 +33,9 @@ var upgrader = {
                     return;
                 }
             }
+            var target = Game.getObjectById(creep.memory.target);
             // If creep is carrying energy, take it to the nearest spawn or extension
             if (!creep.memory.upgrader) {
-                let target = Game.getObjectById(creep.memory.target);
                 if (target) {
                     if (creep.upgradeController(target) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}, range: 3});
@@ -45,9 +45,10 @@ var upgrader = {
             // If creep is not carrying energy, go to the nearest energy source and harvest
             else {
                 var source = Game.getObjectById(creep.memory.targetSource);
-                if(creep.memory.target.pos) {
-                    if(!source || source.energy < creep.store.getFreeCapacity(RESOURCE_ENERGY)) 
-                    creep.memory.targetSource = getBestSource(creep, creep.memory.home, Game.getObjectById(creep.memory.target));
+                if (target == null) {creep.memory.target = false; return}
+                if(!source || source.energy < creep.store.getFreeCapacity(RESOURCE_ENERGY)) {
+                    creep.memory.targetSource = getBestSource(creep, creep.memory.home, target);
+                    return;
                 }
                 if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                     if(creep.moveTo(source.pos), {reusePath: 50}, {noPathFinding: true} !=  0) {

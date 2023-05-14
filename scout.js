@@ -9,22 +9,20 @@ var scout = {
             creepDeath(creep.memory);
             return;
         }
+        // creep.suicide();
         if (creep.memory.targetRoom == undefined) {
             var exits = Game.map.describeExits(creep.room.name);
             var directions = Object.keys(exits);
             var randomDirection = directions[Math.floor(Math.random() * directions.length)];
             var randomExit = exits[randomDirection];
             if (randomExit == creep.memory.lastScoutedRoom) return;
-            creep.memory.targetRoom = String(randomExit);
+            creep.memory.targetRoom = randomExit;
             var noFlag = true;
         }
-        if(creep.memory.home == "W9N5")
+        
         
         if (creep.room.name !== creep.memory.targetRoom) {
-           
             // TODO: maybe make this its own function for pathfinding it is rather big
-
-
             const roomCenter = new RoomPosition(25, 25, creep.memory.targetRoom);
 
             // Check if a path is already cached
@@ -55,7 +53,7 @@ var scout = {
                     });
                     return costs;
                   },
-                  maxOps: 100000,
+                  maxOps: 500,
                   plainCost: 2,
                   swampCost: 10,
                 }

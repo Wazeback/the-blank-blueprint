@@ -51,19 +51,20 @@ var home = {
                 SatusplaceStorage: false,
                 StatusPlaceExtensions: false,
             };
+            room.memory.oldControllerLevel = room.controller.level;
         }
         
         if (room.memory.stage != room.memory.oldStage || Game.time - room.memory.lastCreepSpawnTick >= 20) {
             creepspawner.HandleInitCreeps(room, homeCreeps);
             room.memory.oldStage = room.memory.stage;
             room.memory.lastCreepSpawnTick = Game.time;
-            room.memory.oldControllerLevel = room.controller.level;
+            
             // FIXME: this is everymuch a fix to stuff not spawning maybe find better way of checking soon....
-            room.memory.buildStatus = {
-                SatusplaceRoadsToSource: false,
-                SatusplaceStorage: false,
-                StatusPlaceExtensions: false,
-            };
+            // room.memory.buildStatus = {
+            //     SatusplaceRoadsToSource: false,
+            //     SatusplaceStorage: false,
+            //     StatusPlaceExtensions: false,
+            // };
         }
         
 

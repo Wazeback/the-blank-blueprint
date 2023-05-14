@@ -21,7 +21,6 @@ var harvester = {
                 creep.memory.harvesting = true;
                 creep.memory.target = false;
             }
-            // creep.memory.target = false;
             if (!creep.memory.target) {
                 const targetStructure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                   filter: (structure) => {
@@ -29,20 +28,16 @@ var harvester = {
                             structure.structureType == STRUCTURE_EXTENSION ||
                             structure.structureType == STRUCTURE_CONTAINER ||
                             structure.structureType == STRUCTURE_STORAGE) &&
-                           structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                            structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                   }
                 });
                 if (targetStructure) {
-                  creep.memory.target = targetStructure.id;
-                  creep.memory.targetSource = getBestSource(creep, creep.memory.home, targetStructure);
+                    creep.memory.target = targetStructure.id;
+                    creep.memory.targetSource = getBestSource(creep, creep.memory.home, targetStructure);
                 } else { creep.memory.target = false; return; }
             } 
-              
-            // creep.memory.harvesting = true;
-            if(!creep.memory.harvesting) {
-                
-            // If creep is carrying energy, take it to the nearest spawn or extension
-                let target = Game.getObjectById(creep.memory.target);
+            var target = Game.getObjectById(creep.memory.target);
+            if(!creep.memory.harvesting) {  // If creep is carrying energy, take it to the nearest spawn or extension
                 if (target) {
                     if(target.store.getFreeCapacity(RESOURCE_ENERGY) == 0) { creep.memory.target = false; return;}
                     if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -51,9 +46,10 @@ var harvester = {
                 }
             } else {
                 var source = Game.getObjectById(creep.memory.targetSource);
-                if(creep.memory.target.pos) {
-                    if(!source || source.energy < creep.store.getFreeCapacity(RESOURCE_ENERGY)) 
-                    creep.memory.targetSource = getBestSource(creep, creep.memory.home, Game.getObjectById(creep.memory.target));
+                if (target == null) {creep.memory.target = false; return}
+                if(!source || source.energy < creep.store.getFreeCapacity(RESOURCE_ENERGY)) {
+                    creep.memory.targetSource = getBestSource(creep, creep.memory.home, target);
+                    return;
                 }
                 if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                     if(creep.moveTo(source.pos), {reusePath: 50}, {noPathFinding: true} !=  0) {
@@ -64,9 +60,7 @@ var harvester = {
                 }
             }    
         }
-        else {
-            creep.moveTo(spawn);
-        }
+        else creep.moveTo(spawn);
     }
 }
 module.exports = harvester;

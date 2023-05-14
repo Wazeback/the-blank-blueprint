@@ -20,7 +20,6 @@ var builder = {
             creep.memory.builder = true;
             creep.memory.target = false;
         }
-        // creep.memory.target = false;
         if (!creep.memory.target) {
             const targetStructure = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             if (targetStructure) {
@@ -37,32 +36,35 @@ var builder = {
                     creep.memory.targetSource = getBestSource(creep, creep.memory.home, smallestStructure);
                 }
             }
+            if(!creep.memory.target) { creep.memory.target = false; return;}
         } 
-
+        var target = Game.getObjectById(creep.memory.target);
         // If creep is carrying energy, take it to the nearest construction site and build
         if (!creep.memory.builder) {
-
-            var target = Game.getObjectById(creep.memory.target);
+           
             if (target) {
-                
                 if (target instanceof ConstructionSite) {
-
+                    
                     if (creep.build(target) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
                     }
                 } else if (target instanceof Structure) {
-                  if (creep.repair(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target);
-                  }
+                    if (creep.repair(target) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target);
+                    }
                 }
-              } 
-              
+                // Check if target is out of range
+                if (creep.pos.getRangeTo(target) > 3) {
+                    creep.moveTo(target);
+                }
+            }  
         }
         else {
             var source = Game.getObjectById(creep.memory.targetSource);
-            if(creep.memory.target.pos) {
-                if(!source || source.energy < creep.store.getFreeCapacity(RESOURCE_ENERGY)) 
-                creep.memory.targetSource = getBestSource(creep, creep.memory.home, Game.getObjectById(creep.memory.target));
+            if (target == null) {creep.memory.target = false; return}
+            if(!source || source.energy < creep.store.getFreeCapacity(RESOURCE_ENERGY)) {
+                creep.memory.targetSource = getBestSource(creep, creep.memory.home, target);
+                return;
             }
            
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
@@ -72,6 +74,7 @@ var builder = {
                     }
                 }
             }
+           
         }
     }
 }

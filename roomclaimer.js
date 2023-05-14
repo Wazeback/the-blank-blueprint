@@ -12,13 +12,16 @@ var roomclaimer = {
         }
 
         if(creep.memory.home == creep.pos.roomName &&
-        ( !creep.room.controller.sign || creep.room.controller.sign.text != signTexts[0]))
-            {creep.signController(creep.room.controller, signTexts[0]) }
+        ( !creep.room.controller.sign || creep.room.controller.sign.text != signTexts[0])) {
+            creep.signController(creep.room.controller, signTexts[0]);
+            creep.moveTo(creep.room.controller);
+            return;
+        }
         if(!creep.memory.targetRoom) return;
         if(creep.pos.roomName != creep.memory.targetRoom) {
             const MoveToRoom =  new RoomPosition(25, 25, creep.memory.targetRoom);  
-            if(creep.moveTo(MoveToRoom, {reusePath: 50}) == ERR_NO_PATH) {
-                let path = creep.pos.findPathTo(MoveToRoom, {maxOps: 200});
+            if(creep.moveTo(MoveToRoom, {reusePath: 100}) == ERR_NO_PATH) {
+                let path = creep.pos.findPathTo(MoveToRoom, {maxOps: 50});
                 creep.moveByPath(path)
             }
             return;

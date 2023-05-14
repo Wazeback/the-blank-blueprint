@@ -153,28 +153,29 @@ const screepUtils = {
         
     },
     getBestSource: function(creep, room, target) {
-        var room = Game.rooms[room];
+        // TODO: remember that u do use a pathfinding here so you could cache it and use it for later movement
+        const roomObject = Game.rooms[room];
         let bestSource = null;
         let bestScore = Infinity;
-        let creepsInRoom = _.filter(Game.creeps, (creep) => creep.memory.home == room.name);
         let fewestAssignedCreeps = Infinity;
         let sourceWithFewestAssignedCreeps = null;
-        for (let source in room.memory.sources) {
+        const creepsInRoom = _.filter(Game.creeps, (creep) => creep.memory.home == room.name);
+        const currentCreepStoreAmount = creep.store.getCapacity(RESOURCE_ENERGY);
+        for (let source in roomObject.memory.sources) {
             const sourceId = source;
-            const sourceEnergy = Game.getObjectById(sourceId).energy
-            source = room.memory.sources[source];
-            let sourceRoomPos = new RoomObject(source.sourcePos.x, source.sourcePos.y, source.sourcePos.roomName);
-            const pathToSource = PathFinder.search(creep.pos, {pos: sourceRoomPos.pos, range: 1});
-            const pathToTarget = PathFinder.search(sourceRoomPos.pos, {pos: target.pos, range: 1});
-            const totalDistance = pathToSource.path.length + pathToTarget.path.length;
-            let assignedCreeps = _.filter(creepsInRoom, c => c.memory.targetSource == sourceId && c.store[RESOURCE_ENERGY] > 0.25 * c.store.getCapacity(RESOURCE_ENERGY)).length;
-            if (assignedCreeps >= source.validHarvesterPos.length) {
+            const sourceObject = Game.getObjectById(sourceId);
+            const sourceEnergy = sourceObject.energy;
+            const sourcePos = new RoomPosition(sourceObject.pos.x, sourceObject.pos.y, sourceObject.room.name);
+            let assignedCreeps = _.filter(creepsInRoom, (creep) => creep.memory.targetSource == sourceId && creep.store[RESOURCE_ENERGY] > 0.25 * currentCreepStoreAmount).length;
+            if (assignedCreeps >= roomObject.memory.sources[source].validHarvesterPos.length) {
                 continue;
             }
-            var score = (sourceEnergy / 200) + totalDistance * 2;
-
-            if(sourceEnergy < 200) {
-                var score = 1000000;
+            const pathToSource = creep.pos.findPathTo(sourcePos, { ignoreCreeps: true, ignoreRoads: true }).length;
+            const pathToTarget = sourcePos.findPathTo(target, { ignoreCreeps: true, ignoreRoads: true }).length;
+            const totalDistance = pathToSource + pathToTarget;
+            let score = (sourceEnergy / 100) + (totalDistance);
+            if (sourceEnergy < 200) {
+                score = 1000000;
             }
             if (score < bestScore) {
                 bestSource = sourceId;
@@ -189,7 +190,7 @@ const screepUtils = {
             bestSource = sourceWithFewestAssignedCreeps;
         }
         return bestSource;
-    } 
+    }, 
          
 }
 
