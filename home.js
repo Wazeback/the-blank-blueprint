@@ -30,6 +30,7 @@ var home = {
         _.forEach(creeps, (creep) => {
             eval(creep.memory.role).run(creep);
             // creep.suicide();
+            // if(creep.memory.home == "W9N8"){creep.suicide();}
         })
 
 

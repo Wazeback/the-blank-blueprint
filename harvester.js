@@ -11,12 +11,10 @@ var harvester = {
         }
         const spawn = Game.rooms[creep.memory.home].find(FIND_MY_SPAWNS)[0];
         if (creep.room == Game.rooms[creep.memory.home]) { 
-            // Check if creep is carrying energy and if it's full
             if (creep.memory.harvesting && creep.store.getFreeCapacity() == 0) {
                 creep.memory.harvesting = false;
                 creep.memory.target = false;
             }
-            // Check if creep is not carrying energy and if it's empty
             if (!creep.memory.harvesting && creep.store[RESOURCE_ENERGY] == 0) {
                 creep.memory.harvesting = true;
                 creep.memory.target = false;

@@ -159,21 +159,24 @@ const screepUtils = {
         let bestScore = Infinity;
         let fewestAssignedCreeps = Infinity;
         let sourceWithFewestAssignedCreeps = null;
-        const creepsInRoom = _.filter(Game.creeps, (creep) => creep.memory.home == room.name);
+        const creepsInRoom = _.filter(Game.creeps, (creep) => creep.memory.home == room);
         const currentCreepStoreAmount = creep.store.getCapacity(RESOURCE_ENERGY);
         for (let source in roomObject.memory.sources) {
             const sourceId = source;
             const sourceObject = Game.getObjectById(sourceId);
             const sourceEnergy = sourceObject.energy;
             const sourcePos = new RoomPosition(sourceObject.pos.x, sourceObject.pos.y, sourceObject.room.name);
-            let assignedCreeps = _.filter(creepsInRoom, (creep) => creep.memory.targetSource == sourceId && creep.store[RESOURCE_ENERGY] > 0.25 * currentCreepStoreAmount).length;
-            if (assignedCreeps >= roomObject.memory.sources[source].validHarvesterPos.length) {
+            // TODO: maybe a better filter that checks if the creeps have a sertain amount of stuff still avalible.
+            // let assignedCreeps = _.filter(creepsInRoom, (creep) => creep.memory.targetSource == sourceId && creep.store[RESOURCE_ENERGY] < 0.05 * currentCreepStoreAmount).length;
+            let assignedCreeps = _.filter(creepsInRoom, (creep) => creep.memory.targetSource == sourceId).length;
+            // if(room == "W9N8"){console.log(roomObject.memory.sources[source].validHarvesterPos.length, "   ::  ", assignedCreeps);}
+            if (assignedCreeps > roomObject.memory.sources[source].validHarvesterPos.length) {
                 continue;
             }
             const pathToSource = creep.pos.findPathTo(sourcePos, { ignoreCreeps: true, ignoreRoads: true }).length;
             const pathToTarget = sourcePos.findPathTo(target, { ignoreCreeps: true, ignoreRoads: true }).length;
             const totalDistance = pathToSource + pathToTarget;
-            let score = (sourceEnergy / 100) + (totalDistance);
+            let score = ((sourceEnergy + 1 / 200) + totalDistance) - ( assignedCreeps + 10) ;
             if (sourceEnergy < 200) {
                 score = 1000000;
             }

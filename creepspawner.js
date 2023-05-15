@@ -57,24 +57,16 @@ const SPHandler = {
         var CreepSpawnList = room.memory.CreepSpawnList;
         if(!CreepSpawnList) { room.memory.CreepSpawnList = [] };
 
-        // const harvesterMax = room.find(FIND_SOURCES).length; //TODO: base of amount of free spaces in room.memory.sources.validSourcesPos.length min 2 max: 4
-        // const upgraderMax = 3; // TODO: unless lvl 8 is reached then make it 1;
-        // const builderMax = 3; // TODO: amount of builders based on construction site max 3 min 1;
-        // const defenderMax = 1;
-        // const repairerMax = 2; // TODO: based on the amount of of ramparts / stutures ( not roads) in room;
-        // const moverMax = 2; // TODO: based on if there is a storage unit places down
-        // const scoutMax = 1; // TODO: remember to disable scout based on tag in memory, scouts are very CPU expensive.
-
-
         let harvesterMax = 0;
         let maxFreeSpaces = 0;
         for (const source in room.memory.sources) {
             const freeSpaces = room.memory.sources[source].validHarvesterPos.length;
             if (freeSpaces > maxFreeSpaces) {
                 maxFreeSpaces = freeSpaces;
-                harvesterMax = Math.min(4, freeSpaces);
+                harvesterMax = Math.min(3, freeSpaces);
             }
         }
+
         const upgraderMax = room.controller.level < 8 ? 3 : 1; // Max 3 upgraders until level 8, then 1 upgrader
         const constructionSites = room.find(FIND_CONSTRUCTION_SITES);
         const energyRequired = _.sum(constructionSites, site => site.progressTotal - site.progress);
@@ -83,10 +75,13 @@ const SPHandler = {
         const ramparts = room.find(FIND_MY_STRUCTURES, { filter: { structureType: STRUCTURE_RAMPART } });
         const repairerMax = ramparts ? 2 : 0; // Max 2 repairers, based on the number of ramparts in the room
         const moverMax = room.storage ? 1 : 0; // Max 1 movers if there is a storage, 0 mover otherwise
-        const scoutMax = 1; // Max 1 scout
+        const scoutMax = 1; // TODO: remember to set a tag to see if enough rooms have been scouted.
+
+        // BUG: add a remove from check so that you can infit spawn shit, that respawns ( current plrobelm being that if higher number is reached creep death wil auto repsawn :@)
+        // NOTE: you could do this by just disbaling x amount of screeps respawn memory tag.
 
 
-
+        // TODO: make eval function for getting these const.
         const harvesters = screepsutils.getHarvesterRespawnAmount(screeps, CreepSpawnList);
         const builders = screepsutils.getBuilderRespawnAmount(screeps, CreepSpawnList);
         const upgraders = screepsutils.getUpgraderRespawnAmount(screeps, CreepSpawnList);

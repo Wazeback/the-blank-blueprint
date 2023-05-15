@@ -2,6 +2,7 @@ var creepDeath = require('./creepspawner').HandleCreepDeath;
 var placeFlag = require('./handleflags').placeFlag;
 let markedAsDead = false;
 var scout = {
+    // BUG: scout still gets stuck randomly maybe add more checks
     run: function(creep) {
         // Handles Dying
         if (!markedAsDead && creep.memory.respawn && (creep.ticksToLive <= 10 || creep.hits <= 10)) {
@@ -66,7 +67,7 @@ var scout = {
                 room: creep.room.name,
               };
             }
-            
+            // TODO: Move not working not a correct shifting of array moveTo returns 0 
             // Move to the next position in the cached path
             if (creep.memory.path.path.length > 0) {
               const nextPos = new RoomPosition(creep.memory.path.path[0].x, creep.memory.path.path[0].y, creep.memory.path.room);
@@ -74,7 +75,7 @@ var scout = {
                 // If the creep is already at the next position, remove it from the path
                 creep.memory.path.path.shift();
               } else {
-                creep.moveTo(nextPos);
+                console.log(creep.moveTo(nextPos));
               }
             }
             

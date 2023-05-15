@@ -1,4 +1,3 @@
-const { sortBy } = require('lodash');
 
 var creepDeath = require('./creepspawner').HandleCreepDeath;
 var getBestSource = require('./screepsutils').getBestSource;
